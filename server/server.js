@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser');
 const app = express();
 const bcrypt = require('bcrypt');
 
@@ -9,6 +10,7 @@ mongoose.connect(mongoUri);
 
 /// MIDDLEWARE
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 
 /// MODELS
@@ -49,6 +51,19 @@ app.post('/api/user/login',(req,res)=>{
         })
     })
 })
+
+
+app.get('/api/books',(req,res)=>{
+    let token = req.cookies.auth;
+
+    User.findByToken(token,(err,user)=>{
+        if(err) throw err;
+        if(!user) res.status(401).send({message:'Bad token'});
+        res.status(200).send(user)
+    });  
+})
+
+
 
 
 
