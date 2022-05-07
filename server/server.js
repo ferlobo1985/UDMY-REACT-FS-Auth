@@ -37,18 +37,12 @@ app.post('/api/user/login',(req,res)=>{
         if(!user) res.json({message:'User not found'})
 
         // 2 - compare the password with the HASHED password on the DB, -> move forward
-        bcrypt.compare(req.body.password,user.password,(err,isMatch)=>{
-            if(err) throw err;
-
-            // 3 - send response
+        user.comparePassword(req.body.password,(err,isMatch)=>{
+            if(err) res.status(400).send(err);
+            if(!isMatch) res.json({message:'Bad password'})
             res.status(200).send(isMatch)
         })
     })
-    
-
-
-
-
 })
 
 
