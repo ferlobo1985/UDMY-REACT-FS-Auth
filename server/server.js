@@ -40,7 +40,12 @@ app.post('/api/user/login',(req,res)=>{
         user.comparePassword(req.body.password,(err,isMatch)=>{
             if(err) res.status(400).send(err);
             if(!isMatch) res.json({message:'Bad password'})
-            res.status(200).send(isMatch)
+
+
+            user.generateToken((err,user)=>{
+                if(err) res.status(400).send(err);
+                res.cookie('auth',user.token).send('ok')
+            })
         })
     })
 })
