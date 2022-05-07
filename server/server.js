@@ -22,6 +22,7 @@ app.post('/api/user',(req,res)=>{
         password: req.body.password
     });
 
+
     user.save((err,doc)=>{
         if(err) res.status(400).send(err);
         res.status(200).send(doc)
